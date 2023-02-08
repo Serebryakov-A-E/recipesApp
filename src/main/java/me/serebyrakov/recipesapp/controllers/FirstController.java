@@ -1,13 +1,10 @@
 package me.serebyrakov.recipesapp.controllers;
 
-import me.serebyrakov.recipesapp.SomeInfo;
+import com.google.gson.Gson;
+import me.serebyrakov.recipesapp.model.SomeInfo;
+import me.serebyrakov.recipesapp.services.RecipeService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 
 @RestController
 public class FirstController {
@@ -18,8 +15,8 @@ public class FirstController {
     }
 
     @GetMapping("/info")
-    public SomeInfo studentInfo() {
-        return new SomeInfo();
+    public String studentInfo() {
+        return new Gson().toJson(new SomeInfo());
     }
 }
 
