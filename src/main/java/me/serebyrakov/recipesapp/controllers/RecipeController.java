@@ -1,5 +1,6 @@
 package me.serebyrakov.recipesapp.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import me.serebyrakov.recipesapp.model.Recipe;
 import me.serebyrakov.recipesapp.services.RecipeService;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/recipes")
+@Tag(name = "Рецепты", description = "CRUD operations")
 public class RecipeController {
     private final RecipeService recipeService;
 
