@@ -9,8 +9,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import me.serebyrakov.recipesapp.model.Ingredient;
 import me.serebyrakov.recipesapp.services.IngredientService;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,18 +57,10 @@ public class IngredientController {
     )
     public ResponseEntity<Ingredient> getIngredient(@PathVariable int id) {
         Ingredient ingredient = ingredientService.get(id);
-        if (ObjectUtils.isEmpty(ingredient)) {
-            return ResponseEntity.notFound().build();
-        } else {
+        if (ObjectUtils.isNotEmpty(ingredient)) {
             return ResponseEntity.ok(ingredient);
         }
-        /*
-        if (ingredient == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(ingredient);
-        }
-         */
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/")
@@ -105,12 +97,11 @@ public class IngredientController {
     }
     )
     public ResponseEntity<Ingredient> editIngredient(@PathVariable int id, @RequestBody Ingredient ingredient) {
-        if (ingredientService.get(id) == null) {
-            return ResponseEntity.notFound().build();
-        } else {
+        if (ObjectUtils.isNotEmpty(ingredientService.get(id))) {
             ingredientService.edit(id, ingredient);
             return ResponseEntity.ok(ingredient);
         }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import me.serebyrakov.recipesapp.model.Recipe;
 import me.serebyrakov.recipesapp.services.RecipeService;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,11 +57,10 @@ public class RecipeController {
     )
     public ResponseEntity<Recipe> getRecipe(@PathVariable int id) {
         Recipe recipe = recipeService.get(id);
-        if (recipe == null) {
-            return ResponseEntity.notFound().build();
-        } else {
+        if (ObjectUtils.isNotEmpty(recipe)) {
             return ResponseEntity.ok(recipe);
         }
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/")
@@ -97,12 +97,11 @@ public class RecipeController {
     }
     )
     public ResponseEntity<Recipe> editRecipe(@PathVariable int id, @RequestBody Recipe recipe) {
-        if (recipeService.get(id) == null) {
-            return ResponseEntity.notFound().build();
-        } else {
+        if (ObjectUtils.isNotEmpty(recipeService.get(id))) {
             recipeService.edit(id, recipe);
             return ResponseEntity.ok(recipe);
         }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
