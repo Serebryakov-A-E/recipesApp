@@ -11,11 +11,7 @@ import java.util.Map;
 @Service
 public class RecipeServiceImpl implements RecipeService {
     private final Map<Integer, Recipe> recipes = new HashMap<>();
-    private static int id;
-
-    public RecipeServiceImpl() {
-        id = 1;
-    }
+    private static int id = 1;
 
     @Override
     public int add(Recipe recipe) {

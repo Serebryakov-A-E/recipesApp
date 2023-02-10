@@ -12,8 +12,8 @@ public class FirstController {
     }
 
     @GetMapping("/info")
-    public String studentInfo() {
-        return new SomeInfo().toString();
+    public SomeInfo studentInfo() {
+        return new SomeInfo();
     }
 }
 
