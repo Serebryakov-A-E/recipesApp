@@ -2,8 +2,8 @@ package me.serebyrakov.recipesapp.services.impl;
 
 import me.serebyrakov.recipesapp.model.Ingredient;
 import me.serebyrakov.recipesapp.services.IngredientService;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,16 +12,17 @@ import java.util.Map;
 public class IngredientServiceImpl implements IngredientService {
     private final Map<Integer, Ingredient> ingredients = new HashMap<>();
 
+    private static int id = 1;
 
     @Override
     public int add(Ingredient ingredient) {
-        ingredients.put(ingredients.size() + 1, ingredient);
-        return ingredients.size();
+        ingredients.put(id, ingredient);
+        return id++;
     }
 
     @Override
     public Ingredient get(int id) {
-        return ingredients.getOrDefault(id, null);
+        return ingredients.get(id);
     }
 
     @Override
