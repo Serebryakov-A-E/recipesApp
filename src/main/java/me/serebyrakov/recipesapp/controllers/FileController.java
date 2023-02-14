@@ -27,6 +27,10 @@ public class FileController {
     @Value("${name.of.data.recipe.file}")
     private String recipesDataFileName;
 
+    @Value("${name.of.recipes.file}")
+    private String recipesFile;
+
+
     public FileController(FileService fileService) {
         this.fileService = fileService;
     }
@@ -111,5 +115,32 @@ public class FileController {
             e.printStackTrace();
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @GetMapping(value = "/recipes/exportTxt")
+    @Operation(summary = "Получить txt файл со всеми рецептами")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешно"
+            ),
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Файла не существует"
+            )
+    }
+    )
+    public ResponseEntity<InputStreamResource> downloadRecipesTxt() throws FileNotFoundException {
+        File file = fileService.getDataFile(recipesFile);
+
+        if (file.exists()) {
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+            return ResponseEntity.ok()
+                    .contentLength(file.length())
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"Recipes.txt\"")
+                    .body(resource);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
 }

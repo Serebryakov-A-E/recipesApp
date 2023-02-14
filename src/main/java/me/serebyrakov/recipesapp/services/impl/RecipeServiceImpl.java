@@ -26,6 +26,12 @@ public class RecipeServiceImpl implements RecipeService {
     @Value("${name.of.data.recipe.file}")
     private String dataFileName;
 
+    @Value("${path.to.data.file}")
+    private String pathToDataFile;
+
+    @Value("${name.of.recipes.file}")
+    private String nameOfRecipes;
+
     public RecipeServiceImpl(FileService fileService) {
         this.fileService = fileService;
     }
@@ -33,6 +39,7 @@ public class RecipeServiceImpl implements RecipeService {
     @PostConstruct
     private void init() {
         readFromFile();
+        saveLikeText();
     }
 
     @Override
@@ -65,12 +72,35 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public boolean delete(int id) {
-        if(recipes.containsKey(id)) {
+        if (recipes.containsKey(id)) {
             recipes.remove(id);
             saveFile();
             return true;
         }
         return false;
+    }
+
+    public void saveLikeText() {
+        StringBuilder sb = new StringBuilder();
+        for (Integer integer : recipes.keySet()) {
+            Recipe recipe = recipes.get(integer);
+            sb.append(recipe.getName()).append("\n");
+            sb.append(String.format("Время приготовления: %d минут.\n", recipe.getTime()));
+            sb.append(String.format("Количество порций: %d.\n", recipe.getPortions()));
+            List<Ingredient> list = recipe.getIngredients();
+            sb.append("Ингредиенты: \n");
+            for (int i = 0; i < list.size(); i++) {
+                Ingredient ing = list.get(i);
+                sb.append(String.format("- %s - %d %s.\n", ing.getName(), ing.getCount(), ing.getMeasureUnit()));
+            }
+            sb.append("\nИнструкция приготовления:\n");
+            String[] instruction = recipe.getSteps();
+            for (int i = 0; i < instruction.length; i++) {
+                sb.append(instruction[i]).append("\n");
+            }
+            sb.append("\n");
+            fileService.saveToFile(String.valueOf(sb), nameOfRecipes);
+        }
     }
 
     private void saveFile() {
