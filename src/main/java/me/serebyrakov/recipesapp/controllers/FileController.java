@@ -1,5 +1,8 @@
 package me.serebyrakov.recipesapp.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import me.serebyrakov.recipesapp.services.FileService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +32,19 @@ public class FileController {
     }
 
     @GetMapping(value = "/ingredients/export")
-    public ResponseEntity<InputStreamResource> downloadDataFile() throws FileNotFoundException {
+    @Operation(summary = "Получить файл со всеми ингредиентами")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешно"
+            ),
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Файла не существует"
+            )
+    }
+    )
+    public ResponseEntity<InputStreamResource> downloadIngredientsDataFile() throws FileNotFoundException {
         File file = fileService.getDataFile(ingredientsDataFileName);
 
         if (file.exists()) {
@@ -45,6 +60,18 @@ public class FileController {
     }
 
     @GetMapping(value = "/recipes/export")
+    @Operation(summary = "Получить файл со всеми рецептами")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешно"
+            ),
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Файла не существует"
+            )
+    }
+    )
     public ResponseEntity<InputStreamResource> downloadRecipesDataFile() throws FileNotFoundException {
         File file = fileService.getDataFile(recipesDataFileName);
 
@@ -61,6 +88,18 @@ public class FileController {
     }
 
     @PostMapping(value = "/recipes/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Загрузить файл с рецептами")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Файл успешно загружен"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Ошибка на стороне сервера"
+            )
+    }
+    )
     public ResponseEntity<Void> uploadRecipesDataFile(@RequestParam MultipartFile file) {
         fileService.cleanDataFile(recipesDataFileName);
         File dataFile = fileService.getDataFile(recipesDataFileName);
