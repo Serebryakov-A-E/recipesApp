@@ -27,6 +27,10 @@ public class FileController {
     @Value("${name.of.data.recipe.file}")
     private String recipesDataFileName;
 
+    @Value("${name.of.recipes.file}")
+    private String recipesFile;
+
+
     public FileController(FileService fileService) {
         this.fileService = fileService;
     }
