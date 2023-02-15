@@ -87,34 +87,24 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Path createCurrentRecipesFile() {
         Path path = fileService.createTempFile("currentRecipes");
-        //StringBuilder sb = new StringBuilder();
         for (Integer integer : recipes.keySet()) {
             try (Writer writer = Files.newBufferedWriter(path, StandardOpenOption.APPEND)){
                 Recipe recipe = recipes.get(integer);
                 writer.append(recipe.getName()).append("\n");
                 writer.append(String.format("Время приготовления: %d минут.\n", recipe.getTime()));
                 writer.append(String.format("Количество порций: %d.\n", recipe.getPortions()));
-                //.append(recipe.getName()).append("\n");
-                //sb.append(String.format("Время приготовления: %d минут.\n", recipe.getTime()));
-                //sb.append(String.format("Количество порций: %d.\n", recipe.getPortions()));
                 List<Ingredient> list = recipe.getIngredients();
                 writer.append("Ингредиенты: \n");
-                //sb.append("Ингредиенты: \n");
                 for (int i = 0; i < list.size(); i++) {
                     Ingredient ing = list.get(i);
                     writer.append(String.format("- %s - %d %s.\n", ing.getName(), ing.getCount(), ing.getMeasureUnit()));
-                    //sb.append(String.format("- %s - %d %s.\n", ing.getName(), ing.getCount(), ing.getMeasureUnit()));
                 }
                 writer.append("\nИнструкция приготовления:\n");
-                //sb.append("\nИнструкция приготовления:\n");
                 String[] instruction = recipe.getSteps();
                 for (int i = 0; i < instruction.length; i++) {
                     writer.append(instruction[i]).append("\n");
-                    //sb.append(instruction[i]).append("\n");
                 }
                 writer.append("\n");
-                //sb.append("\n");
-                //fileService.saveToFile(String.valueOf(sb), nameOfRecipes);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
