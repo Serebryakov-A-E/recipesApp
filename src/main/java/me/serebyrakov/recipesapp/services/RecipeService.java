@@ -2,6 +2,7 @@ package me.serebyrakov.recipesapp.services;
 
 import me.serebyrakov.recipesapp.model.Recipe;
 
+import java.nio.file.Path;
 import java.util.List;
 
 public interface RecipeService {
@@ -14,4 +15,6 @@ public interface RecipeService {
     Recipe edit(int id, Recipe recipe);
 
     boolean delete(int id);
+
+    Path createCurrentRecipesFile();
 }
